@@ -1,0 +1,38 @@
+
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>AI Phishing Detection</title>
+<style>
+body{font-family:Arial;background:#0f172a;color:white;margin:0}
+.card{max-width:800px;margin:70px auto;padding:30px;background:#1e293b;border-radius:18px}
+input{width:100%;box-sizing:border-box;padding:15px;margin:15px 0;background:#0f172a;color:white;border:1px solid #475569;border-radius:10px}
+button{padding:13px 22px;border:0;border-radius:10px;cursor:pointer}
+#result{display:none;margin-top:25px;padding:20px;background:#0f172a;border-radius:12px}
+li{margin:8px;color:#cbd5e1}
+</style>
+</head>
+<body>
+<div class="card">
+<h1>🛡️ AI Phishing Detection System</h1>
+<p>Enter a URL to check common phishing indicators.</p>
+<input id="url" placeholder="https://example.com">
+<button onclick="analyze()">Analyze URL</button>
+<div id="result"><h2 id="verdict"></h2><h3 id="score"></h3><ul id="reasons"></ul></div>
+</div>
+<script>
+async function analyze(){
+ const url=document.getElementById("url").value.trim();
+ if(!url){alert("Enter a URL");return;}
+ const r=await fetch("/analyze",{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({url})});
+ const d=await r.json();
+ document.getElementById("result").style.display="block";
+ document.getElementById("verdict").innerText=d.verdict;
+ document.getElementById("score").innerText="Risk Score: "+d.score+"/100";
+ document.getElementById("reasons").innerHTML=d.reasons.map(x=>"<li>"+x+"</li>").join("");
+}
+</script>
+</body>
+</html>
